@@ -3,7 +3,7 @@ import UserTable from './users.model'
 import OrdersTable from './orders.model'
 let db: any = new Object()
 const initializeDB = (cb) => {
-  const sequelize = new Sequelize('signoz', 'root', '', {
+  const sequelize = new Sequelize('signoz', 'root', 'password', {
     dialectOptions: {
       ssl: {
         require: false,

@@ -30,6 +30,11 @@ initializeDB((mysql: any) => {
         })
     })
 
+    // hello world
+    app.get('/hello', async (req, res) => {
+      res.send('hello world')
+    })
+
     // Get the user
     app.get('/user/:id', async (req, res) => {
       try {
