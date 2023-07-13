@@ -12,11 +12,17 @@ app.use((request, response, next) => {
   next()
 })
 
+// Health check endpoint
+app.get('/health', async (req, res) => {
+  res.send('OK')
+})
+
 app.get('/payment/transfer/id/:id', async (req, res) => {
   try {
     if (!!req.query.amount) {
+      const usersServerHost = process.env.USERS_HOST || 'localhost'
       axios
-        .put(`http://localhost:8081/user/${req.params.id}`, {
+        .put(`http://${usersServerHost}:8081/user/${req.params.id}`, {
           AMOUNT: req.query.amount,
         })
         .then((result) => {
@@ -35,5 +41,5 @@ app.get('/payment/transfer/id/:id', async (req, res) => {
   }
 })
 
-app.listen(process.env.PAYMENT_PORT)
-console.log(`payment services is up and running on port ${process.env.PAYMENT_PORT}`)
+app.listen(process.env.PAYMENTS_PORT)
+console.log(`payment services is up and running on port ${process.env.PAYMENTS_PORT}`)
