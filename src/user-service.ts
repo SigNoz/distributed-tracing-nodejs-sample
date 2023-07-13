@@ -15,6 +15,7 @@ initializeDB((mysql: any) => {
     app.use(cors())
     app.use(express.json())
     app.use(express.urlencoded({ extended: false }))
+
     // Create user
     app.post('/user/create', async (req, res) => {
       const userPayload = {
@@ -30,9 +31,9 @@ initializeDB((mysql: any) => {
         })
     })
 
-    // hello world
-    app.get('/hello', async (req, res) => {
-      res.send('hello world')
+    // Health check endpoint
+    app.get('/health', async (req, res) => {
+      res.send('OK')
     })
 
     // Get the user

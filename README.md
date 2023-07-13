@@ -11,7 +11,7 @@ Install all the dependencies by runing `npm install`
 Spin up the services
 
 - `npm run users`
-- `npm run payment`
+- `npm run payments`
 - `npm run orders`
 
 # How to view traces:

@@ -14,11 +14,18 @@ initializeDB((mysql: any) => {
     app.use(cors())
     app.use(express.json())
     app.use(express.urlencoded({ extended: false }))
+
+    // Health check endpoint
+    app.get('/health', async (req, res) => {
+      res.send('OK')
+    })
+
     //Create order
     app.post('/order/create', (req, res) => {
       try {
         if (!!req.body.USER_ID) {
-          axios.get(`http://localhost:8081/user/${req.body.USER_ID}`).then(async (result) => {
+          const usersServerHost = process.env.USERS_HOST || 'localhost'
+          axios.get(`http://${usersServerHost}:8081/user/${req.body.USER_ID}`).then(async (result) => {
           let { ACCOUNT, AMOUNT } = result.data
             console.log(AMOUNT)
             const orderPayload = {
@@ -51,7 +58,7 @@ initializeDB((mysql: any) => {
       }
     })
 
-    app.listen(process.env.ORDER_PORT)
-    console.log(`order services is up and running on port ${process.env.ORDER_PORT}`)
+    app.listen(process.env.ORDERS_PORT)
+    console.log(`order services is up and running on port ${process.env.ORDERS_PORT}`)
   })
 })

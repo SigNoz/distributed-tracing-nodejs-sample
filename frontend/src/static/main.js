@@ -1,8 +1,3 @@
-// Application urls
-const DEFAULT_SIGNOZ_URL = 'http://localhost:3301/application'
-const USER_SERVICE_URL = 'http://localhost:8081/user'
-const PAYMENT_SERVICE_URL = 'http://localhost:8080/payment'
-const ORDER_SERVICE_URL = 'http://localhost:8082/order'
 // Components
 const Title = (props) => <p>{props.label}</p>
 const Response = (props) => <pre>{JSON.stringify(props.result, null, 4)}</pre>
@@ -32,7 +27,11 @@ const App = () => {
           ACCOUNT: 'ABCDE1234F',
         }),
       }
-      let response = await fetch(`${USER_SERVICE_URL}/create`, requestOptions)
+      let userServiceUrl='/user/create';
+      if (typeof USER_PORT !== 'undefined') {
+        userServiceUrl = `http://localhost:${USER_PORT}` + userServiceUrl
+      }
+      let response = await fetch(userServiceUrl, requestOptions)
       let result = await response.json()
       setUser(result)
       console.log(result)
@@ -54,8 +53,12 @@ const App = () => {
     const requestOptions = {
       method: 'GET',
     }
+    let paymentServiceUrl=`/payment/transfer/id/${user.ID}?amount=10000`;
+    if (typeof PAYMENT_PORT !== 'undefined') {
+      paymentServiceUrl = `http://localhost:${PAYMENT_PORT}` + paymentServiceUrl
+    }
     let response = await fetch(
-      `${PAYMENT_SERVICE_URL}/transfer/id/${user.ID}?amount=10000`,
+      paymentServiceUrl,
       requestOptions
     )
     let result = await response.json()
@@ -74,7 +77,11 @@ const App = () => {
         PRICE: product.PRICE,
       }),
     }
-    let response = await fetch(`${ORDER_SERVICE_URL}/create`, requestOptions)
+    let orderServiceUrl='/order/create';
+    if (typeof ORDER_PORT !== 'undefined') {
+      orderServiceUrl = `http://localhost:${ORDER_PORT}` + orderServiceUrl
+    }
+    let response = await fetch(orderServiceUrl, requestOptions)
     let result = await response.json()
     setOrder(result)
     console.log(result)

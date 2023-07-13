@@ -3,6 +3,7 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { Resource } from '@opentelemetry/resources';
 import * as opentelemetry from '@opentelemetry/sdk-node';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import { sign } from 'crypto';
 const { DiagConsoleLogger, DiagLogLevel, diag, metrics } = require('@opentelemetry/api');
 
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
@@ -10,8 +11,14 @@ diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
 const init = function (serviceName: string) {
   // Define traces
   console.log('Initializing tracer for service: ', serviceName)
+  const otelCollector = process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://localhost:4318/v1/traces'
+  const signozAccessToken = process.env.SIGNOZ_ACCESS_TOKEN || null
+
   const traceExporter = new OTLPTraceExporter({
-    url: 'http://localhost:4318/v1/traces',
+    url: otelCollector,
+    headers: {
+      'signoz-access-token': signozAccessToken,
+    }
   })
 
   const sdk = new opentelemetry.NodeSDK({
